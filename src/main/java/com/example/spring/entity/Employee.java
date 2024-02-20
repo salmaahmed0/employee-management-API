@@ -9,12 +9,13 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
     private String name;
 
-    private String department;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    public Employee(String name, String department) {
+    public Employee(String name, Department department) {
         this.name = name;
         this.department = department;
     }
@@ -39,11 +40,11 @@ public class Employee {
         this.name = name;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 

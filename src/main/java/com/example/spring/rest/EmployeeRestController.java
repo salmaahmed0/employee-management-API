@@ -3,7 +3,10 @@ package com.example.spring.rest;
 import com.example.spring.repository.EmployeeRepo;
 import com.example.spring.entity.Employee;
 import com.example.spring.service.EmployeeService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +21,8 @@ public class EmployeeRestController {
     }
 
     @GetMapping("/employees")
-    public List<Employee> getAllEmployees(){
-        return employeeService.findAll();
+    public Page<Employee> getAllEmployees(Pageable pageable){
+        return employeeService.findAll(pageable);
     }
 
     @GetMapping("/employees/{employeeId}")
@@ -32,9 +35,19 @@ public class EmployeeRestController {
         return employee;
     }
 
-    @GetMapping("/{department}")
-    public List<Employee> getEmployeeByDepartment(@PathVariable String department){
-        return  employeeService.findByDepartment(department);
+    @GetMapping("/{department_id}")
+    public List<Employee> getEmployeeByDepartment(@PathVariable int department_id){
+        return  employeeService.findByDepartmentId(department_id);
+    }
+
+    @PostMapping("employees")
+    public Employee createEmployee(@RequestBody Employee employee){
+        return employeeService.save(employee);
+    }
+
+    @GetMapping("/search")
+    public Page<Employee> getSearch(Pageable pageable, @RequestParam(value = "name") String name){
+        return employeeService.findByNameContainingIgnoreCase(pageable, name);
     }
 
     @ExceptionHandler
